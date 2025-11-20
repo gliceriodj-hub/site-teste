@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Los Naka's — Agendamento</title>
+    <style>
+         :root {
+            --bg: #0b0b0b;
+            /* quase preto */
+            --panel: #111111;
+            --muted: #9aa0a6;
+            --accent: #e6e6e6;
+            --glass: rgba(255, 255, 255, 0.04);
+            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+        }
+        
+        * {
+            box-sizing: border-box
+        }
+        
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            background: linear-gradient(180deg, var(--bg), #060606);
+            color: var(--accent);
+        }
+        
+        .wrap {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 28px
+        }
+        /* header */
+        
+        header {
+            display: flex;
+            align-items: center;
+            gap: 18px
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+        
+        .logo svg {
+            width: 64px;
+            height: 64px
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 0.6px
+        }
+        
+        p.lead {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+        /* layout */
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 28px;
+            margin-top: 22px
+        }
+        
+        .card {
+            background: var(--panel);
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+        }
+        /* booking form */
+        
+        form label {
+            display: block;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 8px
+        }
+        
+        input[type=text],
+        input[type=date],
+        input[type=time],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: transparent;
+            color: var(--accent);
+            outline: none
+        }
+        
+        .barbers {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0
+        }
+        
+        .barber {
+            flex: 1;
+            background: var(--glass);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.02)
+        }
+        
+        .barber input {
+            display: none
+        }
+        
+        .barber.selected {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08)
+        }
+        
+        button.primary {
+            display: inline-block;
+            padding: 11px 14px;
+            border-radius: 10px;
+            border: 0;
+            background: transparent;
+            color: var(--accent);
+            cursor: pointer;
+            box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.02);
+            font-weight: 600
+        }
+        
+        button.primary:active {
+            transform: translateY(1px)
+        }
+        /* gallery */
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px
+        }
+        
+        .gallery img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03)
+        }
+        /* bookings list */
+        
+        .bookings-list {
+            max-height: 320px;
+            overflow: auto;
+            margin-top: 12px
+        }
+        
+        .booking-item {
+            padding: 10px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.00));
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.02)
+        }
+        
+        .meta {
+            color: var(--muted);
+            font-size: 13px
+        }
+        
+        footer {
+            margin-top: 24px;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center
+        }
+        /* responsive */
+        
+        @media(max-width:940px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .gallery img {
+                height: 90px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2lHR33H3sIaH2gzunMuAGiffgNdcoEedqPQ&s" alt="Logo Los Naka's" style="width:150px;height:auto;" />
+            <h1 style="text-align:center;">Los Naka's - Agendamentos</h1>
+            <p class="lead" style="text-align:center;">Barbearia tradicional - escolha o barbeiro, data e hora.</p>
+        </header>
+
+        <main style="display:flex;justify-content:center;">
+            <section class="card" style="width:420px;" aria-labelledby="book-title">
+                <h2 id="book-title" style="text-align:center;">Agende seu horário</h2>
+                <p class="meta" style="text-align:center;">Escolha o barbeiro, a data e a hora.</p>
+
+                <form id="bookingForm">
+                    <label for="name">Nome</label>
+                    <input id="name" name="name" type="text" placeholder="Seu nome completo" required />
+
+                    <label>Barbeiro</label>
+                    <div class="barbers" role="radiogroup" aria-label="Selecione barbeiro">
+                        <label class="barber" data-name="Glicério">
+              <input type="radio" name="barber" value="Glicério" checked />
+              <div><strong>Glicério</strong><div class="meta"></div></div>
+            </label>
+                        <label class="barber" data-name="bruno">
+              <input type="radio" name="barber" value="Bruno" />
+              <div><strong>Bruno</strong><div class="meta"></div></div>
+            </label>
+                        <label class="barber" data-name="Rafael">
+              <input type="radio" name="barber" value="Rafael" />
+              <div><strong>Rafael</strong><div class="meta"></div></div>
+            </label>
+                    </div>
+
+                    <label for="date">Data</label>
+                    <input id="date" name="date" type="date" required />
+
+                    <label for="time">Hora</label>
+                    <input id="time" name="time" type="time" required />
+
+                    <label for="phone">Telefone (opcional)</label>
+                    <input id="phone" name="phone" type="text" placeholder="(99) 99999-9999" />
+
+                    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;justify-content:center;">
+                        <button type="submit" class="primary">Confirmar</button>
+                        <button type="button" id="clearBtn" class="primary">Limpar</button>
+                    </div>
+                </form>
+
+                <div class="bookings-list" id="bookings"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p class="meta" style="text-align:center;">Endereço: Rua dos Lirios 633W Bandeirantes</p>
+            <p class="meta" style="text-align:center;">Contato: 65 99625-4321</p>
+
+            <small>Desenvolvido para Los Naka's — Barbearia Los Naka's Since 2018</small>
+        </footer>
+    </div>
+
+    <script>
+        // Script simples para salvar agendamentos no localStorage
+        const form = document.getElementById('bookingForm');
+        const bookingsEl = document.getElementById('bookings');
+        const clearBtn = document.getElementById('clearBtn');
+
+        function loadBookings() {
+            const raw = localStorage.getItem('ln_bookings');
+            return raw ? JSON.parse(raw) : [];
+        }
+
+        function saveBookings(list) {
+            localStorage.setItem('ln_bookings', JSON.stringify(list));
+        }
+
+        function render() {
+            const list = loadBookings();
+            if (!list.length) {
+                bookingsEl.innerHTML = '<div class="meta">Nenhum agendamento salvo.</div>';
+                return;
+            }
+            bookingsEl.innerHTML = list.map(b => {
+                return `<div class="booking-item"><strong>${escapeHtml(b.name)}</strong>
+          <div class="meta">Barbeiro: ${escapeHtml(b.barber)} — ${escapeHtml(b.date)} ${escapeHtml(b.time)}</div>
+          <div class="meta">Tel: ${escapeHtml(b.phone || '-')}</div>
+        </div>`;
+            }).join('');
+        }
+
+        function escapeHtml(s) {
+            if (!s) return '';
+            return s.replace(/[&<>\"']/g, c => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": "&#39;"
+            })[c]);
+        }
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const data = new FormData(form);
+            const booking = {
+                name: data.get('name').trim(),
+                barber: data.get('barber'),
+                date: data.get('date'),
+                time: data.get('time'),
+                phone: data.get('phone').trim()
+            };
+            // validações simples
+            if (!booking.name || !booking.date || !booking.time) {
+                alert('Preencha nome, data e hora.');
+                return;
+            }
+            const list = loadBookings();
+            list.unshift(booking);
+            saveBookings(list);
+            render();
+            form.reset();
+            // manter selecionado o primeiro barbeiro
+            document.querySelector('.barber input[name="barber"]').checked = true;
+            highlightSelected();
+            alert('Agendamento salvo. Para confirmar, contate via WhatsApp.');
+        });
+
+        clearBtn.addEventListener('click', () => {
+            if (!confirm('Deseja limpar todos os agendamentos locais?')) return;
+            localStorage.removeItem('ln_bookings');
+            render();
+        });
+
+        // UI: mostrar seleção visual dos barbeiros
+        function highlightSelected() {
+            document.querySelectorAll('.barber').forEach(lbl => {
+                const input = lbl.querySelector('input');
+                if (input.checked) lbl.classList.add('selected');
+                else lbl.classList.remove('selected');
+                lbl.addEventListener('click', () => {
+                    input.checked = true;
+                    highlightSelected();
+                });
+            });
+        }
+
+        // inicialização
+        (function() {
+            highlightSelected();
+            render();
+            // preenche data mínima como hoje
+            const dateEl = document.getElementById('date');
+            const today = new Date().toISOString().split('T')[0];
+            dateEl.setAttribute('min', today);
+        })();
+    </script>
+</body>
+
+</html>
